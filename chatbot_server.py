@@ -40,7 +40,9 @@ CORS(app)   # Enable CORS for frontend connection
 # Render will automatically set a DATABASE_URL environment variable for its managed PostgreSQL.
 # We use a fallback to a local SQLite for development if DATABASE_URL isn't set (e.g., when running locally).
 if os.environ.get('DATABASE_URL'):
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1) # Render's URL might need 'postgresql' changed to 'postgresql+psycopg2' or similar for SQLAlchemy
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace(
+        "postgresql://", "postgresql+psycopg2://", 1
+    ) # Render's URL might need 'postgresql' changed to 'postgresql+psycopg2' or similar for SQLAlchemy
     # The .replace() is a common workaround for SQLAlchemy's interpretation of Render's default postgresql:// schema
 else:
     # Local SQLite for development (optional, but good for local testing)
