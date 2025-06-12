@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maximas Chatbot</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        /* Base styles */
         * {
             margin: 0;
             padding: 0;
@@ -12,55 +15,192 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #333;
         }
 
         .chat-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 800px;
-            height: 90vh;
+            max-width: 100%;
+            height: 95vh;
             display: flex;
-            flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #e0e0e0;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        /* --- Side Panel --- */
+        .side-panel {
+            width: 250px;
+            background: #283040;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
-            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(0);
+            flex-shrink: 0;
+        }
+
+        .side-panel.closed {
+            transform: translateX(-100%);
+            width: 0;
+            padding: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #764ba2;
+        }
+
+        .logo-icon {
+            font-size: 30px;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:hover {
+            background: #3a475d;
+            color: #ffffff;
+        }
+
+        .nav-button.active {
+            background: #764ba2;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .nav-button-icon {
+            font-size: 20px;
+        }
+
+        .stats-display {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-display h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .stat-item-side {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #c0c0c0;
+        }
+
+        .stat-value-side {
+            font-weight: 500;
+            color: #ffffff;
+        }
+        
+        .user-info-side {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #c0c0c0;
+        }
+        .user-info-side span {
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+
+        /* --- Main Content Areas (Chat, Recent, Stats) --- */
+        .chat-main-view { /* General class for all main content areas */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
-        .chat-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .chat-status {
-            font-size: 14px;
-            opacity: 0.9;
+        .chat-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             gap: 10px;
         }
 
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+            display: none;
+        }
+
+        .chat-title-main {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1; /* Allow title to take space */
+        }
+        .chat-title-main input {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            max-width: calc(100% - 40px); /* Adjust for edit icon */
+        }
+        .chat-title-main .edit-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 18px;
+            color: #666;
+        }
+        .chat-title-main .save-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 18px;
+            color: #4ade80; /* Green for save */
+        }
+
         .status-indicator {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #4ade80;
             animation: pulse 2s infinite;
@@ -71,26 +211,7 @@
             50% { opacity: 0.5; }
         }
 
-        .stats-toggle {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .stats-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .chat-messages {
+        .chat-messages-area { /* Renamed for clarity */
             flex: 1;
             padding: 20px;
             overflow-y: auto;
@@ -99,14 +220,14 @@
         }
 
         .message {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             animation: fadeInUp 0.5s ease;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -124,37 +245,39 @@
 
         .message-bubble {
             display: inline-block;
-            max-width: 70%;
-            padding: 15px 20px;
-            border-radius: 20px;
+            max-width: 75%;
+            padding: 12px 18px;
+            border-radius: 18px;
             word-wrap: break-word;
-            position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            line-height: 1.5;
         }
 
         .message.user .message-bubble {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #764ba2;
             color: white;
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 6px;
         }
 
         .message.bot .message-bubble {
-            background: white;
+            background: #ffffff;
             color: #333;
-            border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 5px;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 6px;
         }
 
         .message-time {
-            font-size: 11px;
+            font-size: 10px;
             opacity: 0.6;
-            margin-top: 5px;
+            margin-top: 4px;
+            color: #888;
         }
 
         .typing-indicator {
             display: none;
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            padding: 0 20px;
         }
 
         .typing-indicator.active {
@@ -163,25 +286,26 @@
 
         .typing-bubble {
             display: inline-block;
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 15px 20px;
-            border-radius: 20px;
-            border-bottom-left-radius: 5px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .typing-dots {
             display: flex;
-            gap: 4px;
+            gap: 5px;
             align-items: center;
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #667eea;
-            animation: typing 1.4s infinite;
+            background: #764ba2;
+            animation: typing 1.4s infinite ease-in-out;
         }
 
         .typing-dot:nth-child(2) {
@@ -197,14 +321,14 @@
                 transform: translateY(0);
             }
             30% {
-                transform: translateY(-10px);
+                transform: translateY(-6px);
             }
         }
 
         .chat-input-container {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e2e8f0;
+            padding: 15px 20px;
+            background: #ffffff;
+            border-top: 1px solid #e0e0e0;
         }
 
         .input-wrapper {
@@ -215,39 +339,45 @@
 
         .chat-input {
             flex: 1;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 12px 16px;
-            font-size: 16px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 15px;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             resize: none;
-            min-height: 20px;
-            max-height: 100px;
-            font-family: inherit;
+            min-height: 45px;
+            max-height: 120px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.4;
         }
 
         .chat-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
         }
 
         .send-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #764ba2;
             color: white;
             border: none;
-            border-radius: 15px;
-            padding: 12px 20px;
+            border-radius: 10px;
+            padding: 10px 18px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            min-width: 80px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            min-width: 70px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .send-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            background: #6a3e91;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
         }
 
         .send-button:disabled {
@@ -255,149 +385,339 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .action-button {
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .action-button:hover {
-            background: #e2e8f0;
-            color: #475569;
-        }
-
-        .stats-panel {
-            position: absolute;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100%;
-            background: white;
-            border-left: 1px solid #e2e8f0;
-            padding: 20px;
-            transition: right 0.3s ease;
-            z-index: 10;
-            overflow-y: auto;
-        }
-
-        .stats-panel.open {
-            right: 0;
-        }
-
-        .stats-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .stat-item {
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-top: 2px;
+            background: #999;
         }
 
         .connection-status {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
             z-index: 1000;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .connection-status.connected {
             background: #dcfce7;
-            color: #166534;
+            color: #16a34a;
             border: 1px solid #bbf7d0;
         }
 
         .connection-status.disconnected {
             background: #fef2f2;
-            color: #991b1b;
+            color: #dc2626;
             border: 1px solid #fecaca;
         }
 
         .error-message {
             background: #fef2f2;
-            color: #991b1b;
+            color: #dc2626;
             padding: 12px;
             border-radius: 8px;
-            margin: 10px 20px;
+            margin: 15px 20px 0;
             border: 1px solid #fecaca;
             display: none;
+            font-size: 14px;
         }
 
         .welcome-message {
             text-align: center;
-            color: #64748b;
-            padding: 40px 20px;
+            color: #666;
+            padding: 30px 20px;
             font-style: italic;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: 12px;
-            margin: 20px;
+            background: #f0f4f8;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 80%;
+            line-height: 1.6;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
+        /* --- View Specific Styles --- */
+        /* These base rules hide all main views by default. JS will add the 'active' class to show them. */
+        #loginRegisterModal, #chatMain, #recentChatsMain, #statsMain {
+            display: none;
+        }
+        /* This rule makes the active view visible */
+        #loginRegisterModal.active, #chatMain.active, #recentChatsMain.active, #statsMain.active {
+            display: flex;
+        }
+
+        /* Login/Register Modal Styles */
+        #loginRegisterModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            /* REMOVED: display: flex; from here. It will now only get display:flex via the .active class. */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .auth-form-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-form-container h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .auth-form-container input[type="text"],
+        .auth-form-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .auth-form-container input[type="text"]:focus,
+        .auth-form-container input[type="password"]:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .auth-form-container button {
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .auth-form-container button:hover {
+            background: #6a3e91;
+            transform: translateY(-1px);
+        }
+
+        .auth-form-container .toggle-auth-mode {
+            background: none;
+            border: none;
+            color: #764ba2;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: color 0.2s ease;
+        }
+
+        .auth-form-container .toggle-auth-mode:hover {
+            color: #6a3e91;
+            text-decoration: underline;
+        }
+
+        .auth-error-message {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Recent Chats List Styles */
+        .recent-chats-list {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background: #f8fafc;
+            border-bottom: 1px solid #e0e0e0; /* To match other main views */
+        }
+        .recent-chats-list p {
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .recent-chat-item {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recent-chat-item:hover {
+            background: #f0f2f5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .recent-chat-item.active {
+            background: #e6eefd; /* Light blueish for active */
+            border-color: #764ba2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .chat-item-content {
+            flex-grow: 1;
+        }
+        .chat-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item-preview {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item-meta {
+            font-size: 10px;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
+        }
+        .chat-item-delete {
+            margin-left: 15px;
+            cursor: pointer;
+            color: #ef4444; /* Red for delete */
+            font-size: 18px;
+            padding: 5px; /* Increase clickable area */
+            border-radius: 50%; /* Make it round */
+            transition: background-color 0.2s ease;
+        }
+        .chat-item-delete:hover {
+            background-color: #fef2f2;
+        }
+
+        /* Global Stats View Styles */
+        .stats-display-main {
+            padding: 20px;
+            background: #f8fafc;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .stats-display-main h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .stats-display-main .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            color: #555;
+        }
+        .stats-display-main .stat-item:last-child {
+            border-bottom: none;
+        }
+        .stats-display-main .stat-item span:last-child {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+            }
+
             .chat-container {
                 height: 100vh;
                 border-radius: 0;
                 max-width: none;
+                box-shadow: none;
+            }
+
+            .side-panel {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 20;
+                transform: translateX(-100%);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .side-panel.open {
+                transform: translateX(0%);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .chat-header {
+                justify-content: flex-start;
+            }
+
+            .chat-title-main {
+                flex-grow: 1;
+                text-align: center;
+                white-space: nowrap; /* Prevent wrapping */
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .chat-title-main span {
+                flex-shrink: 1;
+                min-width: 0;
+            }
+            .chat-title-main input {
+                min-width: 0;
+            }
+            .chat-title-main .edit-icon, .chat-title-main .save-icon {
+                flex-shrink: 0;
+            }
+
+            .chat-actions {
+                display: none;
             }
 
             .message-bubble {
                 max-width: 85%;
             }
 
-            .stats-panel {
-                width: 100%;
-                right: -100%;
+            .connection-status {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
             }
 
-            .stats-toggle {
-                position: static;
-                transform: none;
-                margin-top: 10px;
-            }
-
-            .chat-header {
-                padding: 15px;
-            }
-
-            .chat-title {
-                font-size: 20px;
+            /* Auth modal on small screens */
+            #loginRegisterModal .auth-form-container {
+                border-radius: 0;
+                height: 100vh;
+                width: 100vw;
+                padding: 50px 20px;
             }
         }
     </style>
@@ -405,102 +725,388 @@
 <body>
     <div class="connection-status" id="connectionStatus">Connecting...</div>
     
-    <div class="chat-container">
-        <div class="chat-header">
-            <div class="chat-title">🤖 Maximas Chatbot</div>
-            <div class="chat-status">
-                <span class="status-indicator"></span>
-                <span id="statusText">Ready to chat</span>
+    <!-- Login/Register Modal -->
+    <div class="chat-main-view" id="loginRegisterModal">
+        <div class="auth-form-container">
+            <h2 id="authFormTitle">Login</h2>
+            <input type="text" id="usernameInput" placeholder="Username" required>
+            <input type="password" id="passwordInput" placeholder="Password" required>
+            <button id="authSubmitButton" onclick="handleAuthSubmit()">Login</button>
+            <p class="auth-error-message" id="authErrorMessage"></p>
+            <button class="toggle-auth-mode" onclick="toggleAuthMode()">Don't have an account? Register here.</button>
+        </div>
+    </div>
+
+    <div class="chat-container" id="mainAppContainer" style="display: none;">
+        <!-- Side Panel (visible only when authenticated) -->
+        <div class="side-panel" id="sidePanel">
+            <div class="logo">
+                <span class="logo-icon">🤖</span> Maximas
             </div>
-            <button class="stats-toggle" onclick="toggleStats()">📊 Stats</button>
+            <div class="user-info-side">
+                Logged in as: <span id="loggedInUsername"></span>
+            </div>
+            <button class="nav-button active" id="chatNavButton">
+                <span class="nav-button-icon">💬</span> Chat
+            </button>
+            <button class="nav-button" id="recentChatsNavButton">
+                <span class="nav-button-icon">🕒</span> Recent Chats
+            </button>
+            <button class="nav-button" id="statsNavButton">
+                <span class="nav-button-icon">📊</span> Statistics
+            </button>
+            <button class="nav-button" onclick="startNewConversation()">
+                <span class="nav-button-icon">➕</span> Start New Chat
+            </button>
+            <button class="nav-button" onclick="exportChat()">
+                <span class="nav-button-icon">💾</span> Export Chat
+            </button>
+            <button class="nav-button" onclick="checkHealth()">
+                <span class="nav-button-icon">❤️</span> Health Check
+            </button>
+            <button class="nav-button" onclick="logout()">
+                <span class="nav-button-icon">🚪</span> Logout
+            </button>
+
+            <!-- Current Chat Stats (in side panel) -->
+            <div class="stats-display">
+                <h3>Current Chat Stats</h3>
+                <div class="stat-item-side">
+                    <span>Session ID:</span>
+                    <span class="stat-value-side" id="display-session-id">Loading...</span>
+                </div>
+                <div class="stat-item-side">
+                    <span>Messages Sent:</span>
+                    <span class="stat-value-side" id="messageCountSide">0</span>
+                </div>
+                <div class="stat-item-side">
+                    <span>Conversation Time:</span>
+                    <span class="stat-value-side" id="conversationTimeSide">0 min</span>
+                </div>
+                <div class="stat-item-side">
+                    <span>User Name:</span>
+                    <span class="stat-value-side" id="userNameSide">Not set</span>
+                </div>
+                <div class="stat-item-side">
+                    <span>Server Status:</span>
+                    <span class="stat-value-side" id="serverStatusSide">Unknown</span>
+                </div>
+            </div>
         </div>
 
-        <div class="error-message" id="errorMessage"></div>
+        <!-- Main Chat View -->
+        <div class="chat-main-view" id="chatMain">
+            <div class="chat-header">
+                <button class="menu-toggle" id="menuToggleChat" aria-label="Toggle Menu">☰</button>
+                <div class="chat-title-main">
+                    <span class="status-indicator"></span>
+                    <span id="currentChatTitle">Current Chat</span>
+                    <span class="edit-icon" id="editChatTitleIcon" title="Edit chat title">✎</span>
+                    <input type="text" id="editChatTitleInput" style="display: none;">
+                    <span class="save-icon" id="saveChatTitleIcon" style="display: none;" title="Save title">✔</span>
+                </div>
+            </div>
 
-        <div class="chat-messages" id="chatMessages">
-            <div class="welcome-message">
-                👋 Welcome! I'm your assistant. Feel free to start a conversation - I'm here to chat about anything on your mind!
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="chat-messages-area" id="chatMessages">
+                <div class="welcome-message" id="initialWelcomeMessage">
+                    👋 Welcome! I'm your assistant. Start by typing a message, or explore your recent chats!
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-bubble">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        class="chat-input" 
+                        id="messageInput" 
+                        placeholder="Type your message here..."
+                        rows="1"
+                    ></textarea>
+                    <button class="send-button" id="sendButton">Send</button>
+                </div>
             </div>
         </div>
 
-        <div class="typing-indicator" id="typingIndicator">
-            <div class="typing-bubble">
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
+        <!-- Recent Chats View -->
+        <div class="chat-main-view" id="recentChatsMain">
+            <div class="chat-header">
+                <button class="menu-toggle" id="menuToggleRecent" aria-label="Toggle Menu">☰</button>
+                <div class="chat-title-main">
+                    <span class="status-indicator"></span>
+                    <span>Recent Chats</span>
                 </div>
+            </div>
+            <div class="recent-chats-list" id="recentChatsList">
+                <p style="padding: 20px; text-align: center;">Loading recent chats...</p>
             </div>
         </div>
 
-        <div class="chat-input-container">
-            <div class="input-wrapper">
-                <textarea 
-                    class="chat-input" 
-                    id="messageInput" 
-                    placeholder="Type your message here..."
-                    rows="1"
-                ></textarea>
-                <button class="send-button" id="sendButton" onclick="sendMessage()">Send</button>
+        <!-- Global Statistics View -->
+        <div class="chat-main-view" id="statsMain">
+            <div class="chat-header">
+                <button class="menu-toggle" id="menuToggleStats" aria-label="Toggle Menu">☰</button>
+                <div class="chat-title-main">
+                    <span class="status-indicator"></span>
+                    <span>Global Statistics</span>
+                </div>
             </div>
-            <div class="action-buttons">
-                <button class="action-button" onclick="clearChat()">🗑️ Clear Chat</button>
-                <button class="action-button" onclick="exportChat()">💾 Export</button>
-                <button class="action-button" onclick="checkHealth()">❤️ Health Check</button>
-            </div>
-        </div>
-
-        <div class="stats-panel" id="statsPanel">
-            <div class="stats-title">📊 Chat Statistics</div>
-            <div id="statsContent">
-                <div class="stat-item">
-                    <div class="stat-label">Messages Sent</div>
-                    <div class="stat-value" id="messageCount">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Conversation Time</div>
-                    <div class="stat-value" id="conversationTime">0 min</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">User Name</div>
-                    <div class="stat-value" id="userName">Not set</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Server Status</div>
-                    <div class="stat-value" id="serverStatus">Unknown</div>
-                </div>
+            <div class="stats-display-main">
+                <h3>Overall Bot Usage Stats</h3>
+                <div class="stat-item"><span>Total Registered Users:</span> <span id="globalTotalUsers">N/A</span></div>
+                <div class="stat-item"><span>Total Conversations:</span> <span id="globalTotalConversations">N/A</span></div>
+                <div class="stat-item"><span>Total Messages Sent:</span> <span id="globalTotalMessages">N/A</span></div>
+                <p style="margin-top: 20px; font-style: italic; color: #666;">
+                    These global statistics reflect cumulative usage across all users.
+                </p>
             </div>
         </div>
     </div>
 
     <script>
         // Configuration
-        const API_BASE_URL = 'http://localhost:5050';
+        const API_BASE_URL = 'http://localhost:5050'; 
         
-        // Global variables
+        // Global State Variables
+        let userId = localStorage.getItem('userId');
+        let username = localStorage.getItem('username');
+        let token = localStorage.getItem('token');
+        let currentSessionId = localStorage.getItem('currentSessionId'); // The session ID of the currently displayed chat
+
         let messageCount = 0;
         let conversationStartTime = Date.now();
         let statsInterval;
+        let isSidePanelOpen = window.innerWidth > 768;
+        let authMode = 'login'; // 'login' or 'register'
 
-        // DOM elements
+        // DOM Elements - Authentication
+        const loginRegisterModal = document.getElementById('loginRegisterModal');
+        const authFormTitle = document.getElementById('authFormTitle');
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const authSubmitButton = document.getElementById('authSubmitButton');
+        const authErrorMessage = document.getElementById('authErrorMessage');
+        const toggleAuthModeButton = document.querySelector('.toggle-auth-mode');
+        const mainAppContainer = document.getElementById('mainAppContainer');
+
+        // DOM Elements - General UI
+        const sidePanel = document.getElementById('sidePanel');
+        const loggedInUsernameDisplay = document.getElementById('loggedInUsername');
+        const connectionStatus = document.getElementById('connectionStatus');
+        // Removed: const statusText = document.getElementById('statusText');
+
+        // DOM Elements - Navigation Buttons
+        const chatNavButton = document.getElementById('chatNavButton');
+        const recentChatsNavButton = document.getElementById('recentChatsNavButton');
+        const statsNavButton = document.getElementById('statsNavButton');
+
+        // DOM Elements - Main Content Views
+        const chatMain = document.getElementById('chatMain');
+        const recentChatsMain = document.getElementById('recentChatsMain');
+        const statsMain = document.getElementById('statsMain');
+
+        // DOM Elements - Chat View Specific
+        const menuToggleChat = document.getElementById('menuToggleChat');
+        const currentChatTitle = document.getElementById('currentChatTitle');
+        const editChatTitleIcon = document.getElementById('editChatTitleIcon');
+        const editChatTitleInput = document.getElementById('editChatTitleInput');
+        const saveChatTitleIcon = document.getElementById('saveChatTitleIcon');
+        const errorMessage = document.getElementById('errorMessage');
+        const chatMessages = document.getElementById('chatMessages');
+        const initialWelcomeMessage = document.getElementById('initialWelcomeMessage');
+        const typingIndicator = document.getElementById('typingIndicator');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
-        const chatMessages = document.getElementById('chatMessages');
-        const typingIndicator = document.getElementById('typingIndicator');
-        const errorMessage = document.getElementById('errorMessage');
-        const connectionStatus = document.getElementById('connectionStatus');
-        const statusText = document.getElementById('statusText');
 
-        // Initialize
+        // DOM Elements - Side Panel Stats
+        const displaySessionId = document.getElementById('display-session-id');
+        const messageCountSide = document.getElementById('messageCountSide');
+        const conversationTimeSide = document.getElementById('conversationTimeSide');
+        const userNameSide = document.getElementById('userNameSide');
+        const serverStatusSide = document.getElementById('serverStatusSide');
+
+        // DOM Elements - Recent Chats View Specific
+        const menuToggleRecent = document.getElementById('menuToggleRecent');
+        const recentChatsList = document.getElementById('recentChatsList');
+
+        // DOM Elements - Global Stats View Specific
+        const menuToggleStats = document.getElementById('menuToggleStats');
+        const globalTotalUsers = document.getElementById('globalTotalUsers');
+        const globalTotalConversations = document.getElementById('globalTotalConversations');
+        const globalTotalMessages = document.getElementById('globalTotalMessages');
+
+        // --- Utility Functions ---
+
+        // Helper for making authenticated fetch requests
+        async function authenticatedFetch(url, options = {}) {
+            if (!token) {
+                // If no token, user is not logged in. Redirect to login.
+                showLoginRegisterModal();
+                throw new Error("User not authenticated.");
+            }
+            options.headers = {
+                ...options.headers,
+                'Authorization': `Bearer ${token}`
+            };
+            try {
+                const response = await fetch(url, options);
+                if (response.status === 401) { // Unauthorized - token expired or invalid
+                    console.error("Authentication failed: Invalid or expired token.");
+                    showError("Your session has expired. Please log in again.");
+                    logout(false); // Log out locally but don't call backend /logout again
+                    throw new Error("Authentication expired.");
+                }
+                return response;
+            } catch (error) {
+                console.error("Network or fetch error:", error);
+                showError("Network error. Please check your connection.");
+                throw error;
+            }
+        }
+
+        function generateUniqueId() {
+            return crypto.randomUUID(); // Modern way to generate UUIDs
+        }
+
+        function saveAuthData(id, name, userToken) {
+            localStorage.setItem('userId', id);
+            localStorage.setItem('username', name);
+            localStorage.setItem('token', userToken);
+            userId = id;
+            username = name;
+            token = userToken;
+            loggedInUsernameDisplay.textContent = username;
+        }
+
+        function clearAuthData() {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentSessionId'); // Also clear current session ID
+            userId = null;
+            username = null;
+            token = null;
+            currentSessionId = null;
+        }
+
+        function saveCurrentSessionId(id) {
+            localStorage.setItem('currentSessionId', id);
+            currentSessionId = id;
+            displaySessionId.textContent = id;
+        }
+
+        // --- UI View Management ---
+
+        function showView(viewName) {
+            // First, hide everything that could be a main view
+            loginRegisterModal.classList.remove('active'); // Hide the login modal by removing active class
+            mainAppContainer.style.display = 'none'; // Explicitly hide the main app container
+
+            // Also remove 'active' classes from all navigable views and nav buttons
+            chatMain.classList.remove('active');
+            recentChatsMain.classList.remove('active');
+            statsMain.classList.remove('active');
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+
+            // Now, show the specific view requested
+            if (viewName === 'login') {
+                loginRegisterModal.classList.add('active'); // Show login modal by adding active class
+            } else if (viewName === 'chat') {
+                if (!userId || !token) { // Ensure user is authenticated to show chat
+                    showLoginRegisterModal(); // This will show the login modal and exit
+                    return;
+                }
+                mainAppContainer.style.display = 'flex'; // Show the main application container
+                sidePanel.style.display = 'flex'; // Show side panel (part of main app container)
+                chatMain.classList.add('active'); // Show the specific chat view
+                chatNavButton.classList.add('active'); // Highlight its nav button
+                loadConversation(currentSessionId);
+            } else if (viewName === 'recentChats') {
+                if (!userId || !token) {
+                    showLoginRegisterModal();
+                    return;
+                }
+                mainAppContainer.style.display = 'flex';
+                sidePanel.style.display = 'flex';
+                recentChatsMain.classList.add('active');
+                recentChatsNavButton.classList.add('active');
+                fetchRecentConversations();
+            } else if (viewName === 'stats') {
+                 if (!userId || !token) {
+                    showLoginRegisterModal();
+                    return;
+                }
+                mainAppContainer.style.display = 'flex';
+                sidePanel.style.display = 'flex';
+                statsMain.classList.add('active');
+                statsNavButton.classList.add('active');
+                fetchGlobalStats();
+            }
+
+            // Close side panel on mobile after navigation
+            if (window.innerWidth <= 768) {
+                isSidePanelOpen = false;
+                applySidePanelState();
+            }
+        }
+
+        function showLoginRegisterModal() {
+            mainAppContainer.style.display = 'none';
+            sidePanel.style.display = 'none'; // Hide side panel if not logged in
+            loginRegisterModal.classList.add('active'); // Show modal by adding active class
+            usernameInput.value = '';
+            passwordInput.value = '';
+            showAuthError(''); // Clear any previous error
+            authMode = 'login';
+            authFormTitle.textContent = 'Login';
+            authSubmitButton.textContent = 'Login';
+            toggleAuthModeButton.textContent = "Don't have an account? Register here.";
+            usernameInput.focus();
+        }
+
+        function toggleAuthMode() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            authFormTitle.textContent = authMode === 'login' ? 'Login' : 'Register';
+            authSubmitButton.textContent = authMode === 'login' ? 'Login' : 'Register';
+            toggleAuthModeButton.textContent = authMode === 'login' ? "Don't have an account? Register here." : "Already have an account? Login here.";
+            showAuthError(''); // Clear error on mode switch
+        }
+
+        function showAuthError(message) {
+            authErrorMessage.textContent = message;
+            authErrorMessage.style.display = message ? 'block' : 'none';
+        }
+
+        // --- Core Application Logic ---
+
         document.addEventListener('DOMContentLoaded', function() {
-            checkServerConnection();
+            checkServerConnection(); // Check connection first
             setupEventListeners();
             startStatsUpdater();
-            messageInput.focus();
+
+            if (userId && token) {
+                loggedInUsernameDisplay.textContent = username;
+                if (!currentSessionId) {
+                    // If logged in but no current session, start a new one
+                    saveCurrentSessionId(generateUniqueId());
+                }
+                showView('chat'); // Show chat if already logged in
+            } else {
+                showView('login'); // Show login modal if not logged in
+            }
         });
 
         function setupEventListeners() {
-            // Enter key to send message
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -508,17 +1114,136 @@
                 }
             });
 
-            // Auto-resize textarea
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
 
-            // Clear error on input focus
-            messageInput.addEventListener('focus', function() {
-                hideError();
+            // Menu toggles for all main views
+            menuToggleChat.addEventListener('click', toggleSidePanel);
+            menuToggleRecent.addEventListener('click', toggleSidePanel);
+            menuToggleStats.addEventListener('click', toggleSidePanel);
+
+            chatMessages.addEventListener('click', function() {
+                if (window.innerWidth <= 768 && isSidePanelOpen) {
+                    toggleSidePanel();
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    isSidePanelOpen = true;
+                } else {
+                    // If it was already open on mobile, keep it open, otherwise close
+                    if (!sidePanel.classList.contains('open')) {
+                        isSidePanelOpen = false;
+                    }
+                }
+                applySidePanelState();
+            });
+
+            // Navigation buttons
+            chatNavButton.addEventListener('click', () => showView('chat'));
+            recentChatsNavButton.addEventListener('click', () => showView('recentChats'));
+            statsNavButton.addEventListener('click', () => showView('stats'));
+            sendButton.addEventListener('click', sendMessage); // Explicitly attach to send button
+
+            // Chat title editing
+            editChatTitleIcon.addEventListener('click', enableChatTitleEdit);
+            saveChatTitleIcon.addEventListener('click', saveChatTitle);
+            editChatTitleInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveChatTitle();
+                }
             });
         }
+
+        function applySidePanelState() {
+            if (isSidePanelOpen) {
+                sidePanel.classList.add('open');
+            } else {
+                sidePanel.classList.remove('open');
+            }
+        }
+
+        function toggleSidePanel() {
+            isSidePanelOpen = !isSidePanelOpen;
+            applySidePanelState();
+        }
+
+        // --- Authentication Functions ---
+
+        async function handleAuthSubmit() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            showAuthError(''); // Clear previous errors
+
+            if (!username || !password) {
+                showAuthError("Please enter both username and password.");
+                return;
+            }
+
+            authSubmitButton.disabled = true;
+            authSubmitButton.textContent = "Processing...";
+
+            try {
+                const endpoint = authMode === 'login' ? '/login' : '/register';
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAuthError(data.error || "Authentication failed. Please try again.");
+                    return;
+                }
+
+                if (authMode === 'register') {
+                    // After successful registration, automatically log them in
+                    alert("Registration successful! Please log in.");
+                    toggleAuthMode(); // Switch to login view
+                    usernameInput.value = username; // Pre-fill username
+                } else { // Login successful
+                    saveAuthData(data.user_id, data.username, data.token);
+                    if (!currentSessionId) {
+                        saveCurrentSessionId(generateUniqueId()); // Start a new session if none exists
+                    }
+                    showView('chat'); // Go to chat view
+                    messageInput.focus();
+                }
+            } catch (error) {
+                console.error("Auth process error:", error);
+                showAuthError("Network error or server unreachable. Please try again.");
+            } finally {
+                authSubmitButton.disabled = false;
+                authSubmitButton.textContent = authMode === 'login' ? 'Login' : 'Register';
+            }
+        }
+
+        async function logout(callBackend = true) {
+            if (callBackend) {
+                try {
+                    const response = await authenticatedFetch(`${API_BASE_URL}/logout`, {
+                        method: 'POST'
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error("Backend logout failed:", errorData.message);
+                    }
+                } catch (error) {
+                    console.error("Error during backend logout:", error);
+                }
+            }
+            clearAuthData();
+            showView('login');
+            alert("You have been logged out.");
+        }
+
+        // --- API Calls for Chat Functionality ---
 
         async function checkServerConnection() {
             try {
@@ -526,79 +1251,85 @@
                 if (response.ok) {
                     updateConnectionStatus(true);
                     const data = await response.json();
-                    updateStatus(`Connected - ${data.server}`);
+                    updateStatus(`Connected: ${data.server}`);
+                    serverStatusSide.textContent = 'Online';
                 } else {
                     updateConnectionStatus(false);
                     updateStatus('Server error');
+                    serverStatusSide.textContent = 'Error';
                 }
             } catch (error) {
                 updateConnectionStatus(false);
                 updateStatus('Server offline');
+                serverStatusSide.textContent = 'Offline';
                 console.error('Connection error:', error);
             }
         }
 
         function updateConnectionStatus(connected) {
-            const status = document.getElementById('connectionStatus');
+            const statusIndicator = document.querySelector('.status-indicator');
             if (connected) {
-                status.textContent = '🟢 Connected';
-                status.className = 'connection-status connected';
+                connectionStatus.textContent = '🟢 Connected'; // This sets the base text
+                connectionStatus.className = 'connection-status connected';
+                statusIndicator.style.backgroundColor = '#4ade80';
             } else {
-                status.textContent = '🔴 Disconnected';
-                status.className = 'connection-status disconnected';
+                connectionStatus.textContent = '🔴 Disconnected'; // This sets the base text
+                connectionStatus.className = 'connection-status disconnected';
+                statusIndicator.style.backgroundColor = '#ef4444';
             }
         }
 
         function updateStatus(text) {
-            statusText.textContent = text;
+            // This function is now used to provide more granular text updates
+            // while `updateConnectionStatus` handles the overall connection state (colors/icons).
+            connectionStatus.textContent = text; 
         }
 
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
+            if (!currentSessionId) {
+                showError("No active chat session. Please start a new chat or select a recent one.");
+                return;
+            }
 
-            // Disable send button
             sendButton.disabled = true;
             sendButton.textContent = 'Sending...';
+            hideError(); // Clear any previous error
+
+            // Remove welcome message if it exists
+            const existingWelcomeMessage = document.getElementById('initialWelcomeMessage');
+            if (existingWelcomeMessage) {
+                existingWelcomeMessage.remove();
+            }
 
             try {
-                // Add user message to chat
                 addMessage(message, 'user');
                 messageInput.value = '';
-                messageInput.style.height = 'auto';
+                messageInput.style.height = 'auto'; // Reset textarea height
                 
-                // Show typing indicator
                 showTyping();
 
-                // Send to server
-                const response = await fetch(`${API_BASE_URL}/chat`, {
+                const response = await authenticatedFetch(`${API_BASE_URL}/chat`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: message })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message, session_id: currentSessionId })
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
                 
-                // Hide typing indicator
                 hideTyping();
-                
-                // Add bot response
                 addMessage(data.response, 'bot');
                 
-                // Update message count
-                messageCount = data.message_count || messageCount + 1;
-                
-                // Update connection status
-                updateConnectionStatus(true);
-                updateStatus(`Messages: ${messageCount}`);
-                
-                hideError();
+                messageCount = data.message_count !== undefined ? data.message_count : messageCount + 1;
+                userNameSide.textContent = data.user_context && data.user_context.name ? data.user_context.name : username || 'Not set'; // Prefer server name, then logged in username
+                updateStats(); 
+                updateStatus(`Messages: ${messageCount}`); // Update the text status in connectionStatus
 
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -606,20 +1337,188 @@
                 updateConnectionStatus(false);
                 showError('Failed to send message. Please check your connection and try again.');
                 
-                // Remove user message if send failed
+                // Optionally remove the last user message if sending failed
                 const messages = chatMessages.children;
                 if (messages.length > 0 && messages[messages.length - 1].classList.contains('user')) {
                     messages[messages.length - 1].remove();
                 }
             } finally {
-                // Re-enable send button
                 sendButton.disabled = false;
                 sendButton.textContent = 'Send';
                 messageInput.focus();
             }
         }
 
-        function addMessage(text, sender) {
+        async function loadConversation(sessionIdToLoad) {
+            if (!sessionIdToLoad) {
+                chatMessages.innerHTML = `<div class="welcome-message" id="initialWelcomeMessage">👋 Welcome! I'm your assistant. Start by typing a message, or explore your recent chats!</div>`;
+                updateStatus('Ready for a new chat');
+                currentChatTitle.textContent = "New Chat";
+                editChatTitleInput.value = "New Chat";
+                messageCount = 0;
+                conversationStartTime = Date.now();
+                updateStats();
+                return;
+            }
+
+            saveCurrentSessionId(sessionIdToLoad); // Set this as the active session
+            chatMessages.innerHTML = '<p style="text-align: center; color: #888;">Loading conversation...</p>';
+            updateStatus('Loading conversation...');
+
+            try {
+                const response = await authenticatedFetch(`${API_BASE_URL}/conversation/${sessionIdToLoad}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn(`No conversation history found for session ID: ${sessionIdToLoad}. Starting fresh.`);
+                        chatMessages.innerHTML = `<div class="welcome-message" id="initialWelcomeMessage">👋 Welcome! I'm your assistant. Start by typing a message, or explore your recent chats!</div>`;
+                        updateStatus('Ready for a new chat');
+                        currentChatTitle.textContent = "New Chat";
+                        editChatTitleInput.value = "New Chat";
+                        messageCount = 0;
+                        conversationStartTime = Date.now();
+                        updateStats();
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                chatMessages.innerHTML = ''; // Clear loading message
+
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(entry => {
+                        addMessage(entry.message, entry.sender, entry.timestamp);
+                    });
+                    // Set conversation start time from the earliest message in the history
+                    conversationStartTime = new Date(data.messages[0].timestamp).getTime();
+                    updateStatus(`Loaded session: ${sessionIdToLoad.substring(0, 8)}...`);
+                    currentChatTitle.textContent = data.title || `Chat ${sessionIdToLoad.substring(0, 8)}...`;
+                    editChatTitleInput.value = data.title || `Chat ${sessionIdToLoad.substring(0, 8)}...`;
+                } else {
+                    chatMessages.innerHTML = `<div class="welcome-message" id="initialWelcomeMessage">👋 Welcome! I'm your assistant. Start by typing a message, or explore your recent chats!</div>`;
+                    updateStatus('Ready for a new chat');
+                    currentChatTitle.textContent = "New Chat";
+                    editChatTitleInput.value = "New Chat";
+                }
+
+                // Update stats based on loaded summary
+                messageCount = data.summary ? data.summary.conversation_stats.total_messages : 0; // Correctly get message count from summary
+                userNameSide.textContent = data.summary && data.summary.user_context ? data.summary.user_context.name || username : username || 'Not set';
+                updateStats(); 
+
+            } catch (error) {
+                console.error('Error loading conversation history:', error);
+                showError('Oops! I had trouble loading this conversation. Please try again or start a new chat.');
+                chatMessages.innerHTML = `<div class="welcome-message" id="initialWelcomeMessage">Failed to load past conversation. Please try again later.</div>`;
+            }
+        }
+
+        async function fetchRecentConversations() {
+            recentChatsList.innerHTML = '<p style="padding: 20px; text-align: center;">Loading recent chats...</p>';
+            try {
+                const response = await authenticatedFetch(`${API_BASE_URL}/conversations/list`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const conversations = await response.json();
+
+                recentChatsList.innerHTML = ''; // Clear loading message
+
+                if (conversations.length === 0) {
+                    recentChatsList.innerHTML = '<p style="padding: 20px; text-align: center;">You have no recent chats yet. Start a new conversation!</p>';
+                } else {
+                    conversations.forEach(conv => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = `recent-chat-item ${conv.session_id === currentSessionId ? 'active' : ''}`;
+                        itemDiv.dataset.sessionId = conv.session_id;
+
+                        const lastActiveDate = new Date(conv.last_active_timestamp);
+                        const formattedDate = lastActiveDate.toLocaleDateString();
+                        const formattedTime = lastActiveDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        itemDiv.innerHTML = `
+                            <div class="chat-item-content">
+                                <div class="chat-item-title">${conv.title}</div>
+                                <div class="chat-item-preview">${conv.last_message_preview}</div>
+                                <div class="chat-item-meta">Last active: ${formattedDate} ${formattedTime} | ${conv.message_count} messages</div>
+                            </div>
+                            <span class="chat-item-delete" data-session-id="${conv.session_id}" title="Delete this chat">✖</span>
+                        `;
+                        itemDiv.addEventListener('click', (e) => {
+                            // Only load if clicked on content, not delete button
+                            if (!e.target.classList.contains('chat-item-delete')) {
+                                showView('chat'); // Switch to chat view
+                                loadConversation(conv.session_id);
+                            }
+                        });
+                        // Add event listener for delete icon
+                        itemDiv.querySelector('.chat-item-delete').addEventListener('click', (e) => {
+                            e.stopPropagation(); // Prevent item click from firing
+                            deleteConversation(conv.session_id, conv.title);
+                        });
+                        recentChatsList.appendChild(itemDiv);
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching recent conversations:", error);
+                showError("Failed to load recent chats. Please try again later.");
+                recentChatsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #dc2626;">Failed to load recent chats. Server error?</p>';
+            }
+        }
+
+        async function deleteConversation(sessionIdToDelete, title) {
+            // Using a custom modal/dialog is preferred over alert/confirm for better UX.
+            // For now, retaining original behavior with `confirm`.
+            if (!confirm(`Are you sure you want to delete the chat titled "${title}"? This cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await authenticatedFetch(`${API_BASE_URL}/reset`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionIdToDelete })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                alert(`Chat "${title}" successfully deleted.`);
+                if (sessionIdToDelete === currentSessionId) {
+                    // If current chat was deleted, start a fresh one
+                    startNewConversation();
+                }
+                fetchRecentConversations(); // Refresh the recent chats list
+            }
+            catch (error) {
+                console.error("Error deleting conversation:", error);
+                showError(`Failed to delete chat "${title}".`);
+            }
+        }
+
+        async function startNewConversation() {
+            // No confirmation needed as the previous chat is now saved
+            // and this simply generates a new session for the frontend.
+            saveCurrentSessionId(generateUniqueId());
+            chatMessages.innerHTML = ''; // Clear display
+            // Add a new welcome message for the fresh start
+            chatMessages.innerHTML = `<div class="welcome-message" id="initialWelcomeMessage">👋 Welcome! I'm your assistant. Start by typing a message, or explore your recent chats!</div>`;
+            
+            // Reset local stats
+            messageCount = 0;
+            conversationStartTime = Date.now();
+            userNameSide.textContent = username || 'Not set';
+            
+            updateStats();
+            updateStatus('New chat started');
+            currentChatTitle.textContent = "New Chat"; // Default title for new chat
+            editChatTitleInput.value = "New Chat";
+            messageInput.focus();
+        }
+
+        function addMessage(text, sender, timestamp = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
             
@@ -629,20 +1528,14 @@
             
             const timeDiv = document.createElement('div');
             timeDiv.className = 'message-time';
-            timeDiv.textContent = new Date().toLocaleTimeString();
+            const date = timestamp ? new Date(timestamp) : new Date(); 
+            timeDiv.textContent = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             messageDiv.appendChild(bubbleDiv);
             messageDiv.appendChild(timeDiv);
             chatMessages.appendChild(messageDiv);
             
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            // Remove welcome message if it exists
-            const welcomeMessage = chatMessages.querySelector('.welcome-message');
-            if (welcomeMessage) {
-                welcomeMessage.remove();
-            }
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
         }
 
         function showTyping() {
@@ -664,132 +1557,104 @@
             errorMessage.style.display = 'none';
         }
 
-        async function clearChat() {
-            if (confirm('Are you sure you want to clear the chat history?')) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/reset`, {
-                        method: 'POST'
-                    });
-                    
-                    if (response.ok) {
-                        chatMessages.innerHTML = '<div class="welcome-message">Chat cleared! Ready for a fresh conversation. 🌟</div>';
-                        messageCount = 0;
-                        conversationStartTime = Date.now();
-                        updateStatus('Chat cleared');
-                        updateStats();
-                    } else {
-                        showError('Failed to clear chat on server');
-                    }
-                } catch (error) {
-                    console.error('Error clearing chat:', error);
-                    showError('Failed to clear chat');
-                }
-            }
-        }
-
         function exportChat() {
-            const messages = Array.from(chatMessages.children)
-                .filter(el => el.classList.contains('message'))
-                .map(el => {
-                    const bubble = el.querySelector('.message-bubble');
-                    const time = el.querySelector('.message-time');
-                    const sender = el.classList.contains('user') ? 'You' : 'Bot';
-                    return `[${time.textContent}] ${sender}: ${bubble.textContent}`;
-                }).join('\n');
-
-            if (messages) {
-                const blob = new Blob([messages], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `chatbot-conversation-${new Date().toISOString().split('T')[0]}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                updateStatus('Chat exported');
-            } else {
-                showError('No messages to export');
-            }
+            alert('Export chat functionality would typically download the conversation history from the server. (Not implemented in this demo)');
         }
 
-        async function checkHealth() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/health`);
-                if (response.ok) {
-                    const data = await response.json();
-                    updateStatus(`Health: ${data.status}`);
-                    updateConnectionStatus(true);
-                } else {
-                    updateStatus('Health check failed');
-                    updateConnectionStatus(false);
-                }
-            } catch (error) {
-                updateStatus('Health check error');
-                updateConnectionStatus(false);
-            }
+        function checkHealth() {
+            checkServerConnection();
         }
 
-        function toggleStats() {
-            const panel = document.getElementById('statsPanel');
-            panel.classList.toggle('open');
-            if (panel.classList.contains('open')) {
-                updateStats();
-            }
-        }
-
-        async function updateStats() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/stats`);
-                if (response.ok) {
-                    const data = await response.json();
-                    
-                    document.getElementById('messageCount').textContent = 
-                        data.stats?.user_messages || messageCount;
-                    
-                    const duration = Math.round((Date.now() - conversationStartTime) / 60000);
-                    document.getElementById('conversationTime').textContent = `${duration} min`;
-                    
-                    document.getElementById('userName').textContent = 
-                        data.user_context?.name || 'Not set';
-                    
-                    document.getElementById('serverStatus').textContent = 'Online';
-                } else {
-                    document.getElementById('serverStatus').textContent = 'Error';
-                }
-            } catch (error) {
-                document.getElementById('serverStatus').textContent = 'Offline';
-            }
+        // --- Stats Functions ---
+        function updateStats() {
+            messageCountSide.textContent = messageCount;
+            const elapsedMilliseconds = Date.now() - conversationStartTime;
+            const elapsedMinutes = Math.floor(elapsedMilliseconds / (1000 * 60));
+            const elapsedSeconds = Math.floor((elapsedMilliseconds % (1000 * 60)) / 1000);
+            conversationTimeSide.textContent = `${elapsedMinutes} min ${elapsedSeconds} sec`;
         }
 
         function startStatsUpdater() {
-            // Update stats every 30 seconds
-            statsInterval = setInterval(() => {
-                const panel = document.getElementById('statsPanel');
-                if (panel.classList.contains('open')) {
-                    updateStats();
-                }
-                checkServerConnection();
-            }, 30000);
-        }
-
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', function() {
             if (statsInterval) {
                 clearInterval(statsInterval);
             }
-        });
+            statsInterval = setInterval(updateStats, 1000);
+        }
 
-        // Handle connection errors gracefully
-        window.addEventListener('online', function() {
-            checkServerConnection();
-            updateStatus('Back online');
-        });
+        async function fetchGlobalStats() {
+            try {
+                // Global stats don't necessarily require authentication,
+                // but calling authenticatedFetch ensures consistency
+                const response = await authenticatedFetch(`${API_BASE_URL}/stats`); 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.global_stats) {
+                    globalTotalUsers.textContent = data.global_stats.total_users;
+                    globalTotalConversations.textContent = data.global_stats.total_conversations;
+                    globalTotalMessages.textContent = data.global_stats.total_messages_across_all_conversations;
+                }
+            } catch (error) {
+                console.error("Error fetching global stats:", error);
+                globalTotalUsers.textContent = 'Error';
+                globalTotalConversations.textContent = 'Error';
+                globalTotalMessages.textContent = 'Error';
+                showError("Failed to load global statistics.");
+            }
+        }
 
-        window.addEventListener('offline', function() {
-            updateConnectionStatus(false);
-            updateStatus('No internet connection');
-        });
+        // --- Chat Title Editing ---
+        function enableChatTitleEdit() {
+            currentChatTitle.style.display = 'none';
+            editChatTitleIcon.style.display = 'none';
+            editChatTitleInput.style.display = 'inline-block';
+            saveChatTitleIcon.style.display = 'inline-block';
+            editChatTitleInput.focus();
+            editChatTitleInput.select(); // Select all text
+        }
+
+        async function saveChatTitle() {
+            const newTitle = editChatTitleInput.value.trim();
+            if (!newTitle) {
+                showError("Chat title cannot be empty.");
+                return;
+            }
+            if (newTitle === currentChatTitle.textContent) {
+                // No change, just exit edit mode
+                disableChatTitleEdit();
+                return;
+            }
+
+            try {
+                const response = await authenticatedFetch(`${API_BASE_URL}/conversation/title/${currentSessionId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: newTitle })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                alert('Chat title updated successfully!');
+                currentChatTitle.textContent = newTitle;
+                disableChatTitleEdit();
+                fetchRecentConversations(); // Refresh recent chats to show new title
+            } catch (error) {
+                console.error("Error updating chat title:", error);
+                showError(`Failed to update chat title. ${error.message}`);
+            }
+        }
+
+        function disableChatTitleEdit() {
+            currentChatTitle.style.display = 'inline-block';
+            editChatTitleIcon.style.display = 'inline-block';
+            editChatTitleInput.style.display = 'none';
+            saveChatTitleIcon.style.display = 'none';
+        }
+
     </script>
 </body>
 </html>
