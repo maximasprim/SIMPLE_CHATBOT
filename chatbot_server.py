@@ -29,10 +29,26 @@ app = Flask(__name__)
 CORS(app)   # Enable CORS for frontend connection
 
 # Configure SQLAlchemy for SQLite
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'chatbot.db') # Database file will be created here
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Suppresses a warning
+# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# DB_PATH = os.path.join(BASE_DIR, 'chatbot.db') # Database file will be created here
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Suppresses a warning
+# db = SQLAlchemy(app)
+
+
+# Configure SQLAlchemy for PostgreSQL
+# Render will automatically set a DATABASE_URL environment variable for its managed PostgreSQL.
+# We use a fallback to a local SQLite for development if DATABASE_URL isn't set (e.g., when running locally).
+if os.environ.get('DATABASE_URL'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1) # Render's URL might need 'postgresql' changed to 'postgresql+psycopg2' or similar for SQLAlchemy
+    # The .replace() is a common workaround for SQLAlchemy's interpretation of Render's default postgresql:// schema
+else:
+    # Local SQLite for development (optional, but good for local testing)
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    DB_PATH = os.path.join(BASE_DIR, 'chatbot.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # --- Database Models ---
