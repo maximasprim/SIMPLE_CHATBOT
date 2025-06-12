@@ -1002,6 +1002,6 @@ if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
         port=5050,
-        debug=True, # Set to False in production!
+        debug=False, # Set to False in production!
         use_reloader=False # Keep False for stable in-memory 'active_chatbots' and 'logged_in_users'
     )
